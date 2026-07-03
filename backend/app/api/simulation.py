@@ -52,11 +52,17 @@ class EnvironmentConfig(BaseModel):
     road: str
     weather: str
     initial_soc: float = 100.0
+    domain: int = 0
 
 @router.post("/configure")
 async def configure_environment(req: EnvironmentConfig):
+    await simulation_service.switch_domain(req.domain)
     if hasattr(simulation_service.adapter, 'configure_environment'):
-        await simulation_service.adapter.configure_environment(req.vehicle, req.road, req.weather, req.initial_soc)
+        if req.domain == 1:
+            # For aerospace, we use the initial_soc param as initial_fuel_kg
+            await simulation_service.adapter.configure_environment(req.vehicle, req.road, req.weather, req.initial_soc, req.domain)
+        else:
+            await simulation_service.adapter.configure_environment(req.vehicle, req.road, req.weather, req.initial_soc)
     return {"status": "success", "config": req.dict()}
 
 class TestRequest(BaseModel):

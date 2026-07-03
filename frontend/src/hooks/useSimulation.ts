@@ -86,7 +86,7 @@ export function useSimulation(onEvent?: (time: string, severity: 'INFO' | 'WARNI
     }
   };
 
-  const configureEnvironment = async (config: { vehicle: string, road: string, weather: string, initial_soc?: number }) => {
+  const configureEnvironment = async (config: { vehicle: string, road: string, weather: string, initial_soc?: number, domain?: number }) => {
     latestConfig.current = config;
     try {
       await fetch(`${API_BASE}/configure`, {

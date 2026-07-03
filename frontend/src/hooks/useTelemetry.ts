@@ -17,6 +17,19 @@ export interface TelemetryData {
   radiator_fan_speed_percent: number;
   acceleration_mps2: number;
   lateral_acceleration_mps2: number;
+  domain: number;
+  altitude_ft: number;
+  airspeed_kts: number;
+  mach_number: number;
+  pitch_deg: number;
+  roll_deg: number;
+  heading_deg: number;
+  engine1_n1_percent: number;
+  engine2_n1_percent: number;
+  engine1_egt_c: number;
+  engine2_egt_c: number;
+  thrust_kn: number;
+  fuel_remaining_kg: number;
 }
 
 export function useTelemetry(url: string = 'ws://localhost:8000/ws/telemetry') {

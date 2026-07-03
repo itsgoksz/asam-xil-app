@@ -28,3 +28,24 @@ class TelemetryRecord(Base):
     radiator_fan_speed_percent = Column(Float, default=0.0)
     acceleration_mps2 = Column(Float, default=0.0)
     lateral_acceleration_mps2 = Column(Float, default=0.0)
+
+    # Aerospace Telemetry
+    domain = Column(Integer, default=0) # 0 = Auto, 1 = Aero
+    altitude_ft = Column(Float, default=0.0)
+    airspeed_kts = Column(Float, default=0.0)
+    mach_number = Column(Float, default=0.0)
+    pitch_deg = Column(Float, default=0.0)
+    roll_deg = Column(Float, default=0.0)
+    heading_deg = Column(Float, default=0.0)
+    
+    # GEnx-1B Engine Telemetry
+    engine1_n1_percent = Column(Float, default=0.0)
+    engine2_n1_percent = Column(Float, default=0.0)
+    engine1_n2_percent = Column(Float, default=0.0)
+    engine2_n2_percent = Column(Float, default=0.0)
+    engine1_egt_c = Column(Float, default=20.0)
+    engine2_egt_c = Column(Float, default=20.0)
+    engine1_fuel_flow_kgh = Column(Float, default=0.0)
+    engine2_fuel_flow_kgh = Column(Float, default=0.0)
+    thrust_kn = Column(Float, default=0.0)
+    fuel_remaining_kg = Column(Float, default=0.0)

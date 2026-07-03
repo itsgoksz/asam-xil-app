@@ -4,17 +4,20 @@ import { useTelemetry } from './hooks/useTelemetry';
 import { useSimulation } from './hooks/useSimulation';
 import { TelemetryChart } from './components/TelemetryChart';
 import { VariableExplorer } from './features/explorer/VariableExplorer';
-import { VehicleTwin } from './features/twin/VehicleTwin';
 import { EventConsole, type ConsoleEvent } from './components/console/EventConsole';
 
 import { Scenarios } from './features/scenarios/Scenarios';
 import { FaultInjection } from './features/faults/FaultInjection';
 import { Copilot } from './features/copilot/Copilot';
 import { DriveControls } from './features/controls/DriveControls';
+import { AeroControls } from './features/controls/AeroControls';
+import { VehicleTwin } from './features/twin/VehicleTwin';
+import { AeroTwin } from './features/twin/AeroTwin';
 import { RobotFramework } from './features/robot/RobotFramework';
 import { ValidationReports } from './features/reports/ValidationReports';
 import { DigitalTwinConfig } from './features/twin/DigitalTwinConfig';
 import { SystemDiagnostics } from './components/SystemDiagnostics';
+
 function App() {
   const { data, status: wsStatus } = useTelemetry();
   const [events, setEvents] = useState<ConsoleEvent[]>([]);
@@ -85,7 +88,7 @@ function App() {
             {/* Main Grid: Left Sidebar | Center Stage (Twin) | Right Sidebar */}
             <Box sx={{ display: 'grid', gridTemplateColumns: '280px 1fr 300px', width: '100%', gap: 1.5, flexGrow: 1, minHeight: 0 }}>
               
-              {/* --- LEFT SIDEBAR (Controls) --- */}
+              {/* --- LEFT SIDEBAR (Controls & Validation) --- */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 0, overflowY: 'auto', pr: 0.5 }}>
                 <Paper sx={{ p: 2.5, borderRadius: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, bgcolor: 'background.paper', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
                   <Typography variant="caption" sx={{ mb: 2, fontWeight: 700, color: '#8E8E93', letterSpacing: '1.5px' }}>MOTOR START / STOP</Typography>
@@ -107,16 +110,24 @@ function App() {
                   </Box>
                 </Paper>
                 
-                <Box sx={{ flexShrink: 0, bgcolor: 'background.paper', borderRadius: 3, border: '1px solid rgba(255, 255, 255, 0.05)', overflow: 'hidden' }}>
-                  <DriveControls telemetry={data} writeSignal={writeSignal} />
+                <Box sx={{ flexShrink: 0 }}>
+                  {data?.domain === 1 ? (
+                    <AeroControls telemetry={data} writeSignal={writeSignal} />
+                  ) : (
+                    <DriveControls telemetry={data} writeSignal={writeSignal} />
+                  )}
                 </Box>
               </Box>
 
               {/* --- CENTER STAGE (3D Twin ONLY) --- */}
               <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
-                {/* 3D Digital Twin with HUD */}
-                <Box sx={{ flexGrow: 1, minHeight: 0, borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                  <VehicleTwin telemetry={data} />
+                {/* --- CENTER STAGE (3D Digital Twin) --- */}
+                <Box sx={{ flexGrow: 1, minHeight: 0, bgcolor: 'background.paper', borderRadius: 3, overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.05)', position: 'relative' }}>
+                  {data?.domain === 1 ? (
+                    <AeroTwin telemetry={data} />
+                  ) : (
+                    <VehicleTwin telemetry={data} />
+                  )}
                 </Box>
               </Box>
 
@@ -135,10 +146,21 @@ function App() {
 
             {/* --- BOTTOM ROW (Full Width Telemetry Graphs) --- */}
             <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 1.5, height: 160, flexShrink: 0 }}>
-              <TelemetryChart title="Vehicle Speed" value={data?.vehicle_speed_kmh || 0} unit="km/h" max={200} />
-              <TelemetryChart title="Motor RPM" value={data?.rpm || 0} unit="RPM" color="#FFD700" max={12000} />
-              <TelemetryChart title="Battery SOC" value={data?.battery_soc || 100} unit="%" color="#32D74B" min={0} max={100} />
-              <TelemetryChart title="Motor Temp" value={data?.motor_temp_c || 25} unit="°C" color="#FF3B30" min={20} max={150} />
+              {data?.domain === 1 ? (
+                <>
+                  <TelemetryChart title="Airspeed" value={data?.airspeed_kts || 0} unit="kts" max={600} />
+                  <TelemetryChart title="Altitude" value={data?.altitude_ft || 0} unit="ft" color="#0A84FF" max={40000} />
+                  <TelemetryChart title="GEnx-1B N1 Spool" value={data?.engine1_n1_percent || 0} unit="%" color="#FFD700" min={0} max={120} />
+                  <TelemetryChart title="Thrust" value={data?.thrust_kn || 0} unit="kN" color="#FF3B30" min={0} max={680} />
+                </>
+              ) : (
+                <>
+                  <TelemetryChart title="Vehicle Speed" value={data?.vehicle_speed_kmh || 0} unit="km/h" max={200} />
+                  <TelemetryChart title="Motor RPM" value={data?.rpm || 0} unit="RPM" color="#FFD700" max={12000} />
+                  <TelemetryChart title="Battery SOC" value={data?.battery_soc || 100} unit="%" color="#32D74B" min={0} max={100} />
+                  <TelemetryChart title="Motor Temp" value={data?.motor_temp_c || 25} unit="°C" color="#FF3B30" min={20} max={150} />
+                </>
+              )}
             </Box>
             
           </Box>

@@ -1,5 +1,7 @@
 from app.adapters.mock_adapter import MockXILAdapter
+from app.adapters.mock_aero_adapter import MockAeroAdapter
 from app.adapters.ixil_adapter import IXILAdapter
+import asyncio
 
 class SimulationService:
     """
@@ -8,6 +10,7 @@ class SimulationService:
     """
     _instance = None
     _adapter: IXILAdapter = None
+    _domain: int = 0
 
     def __new__(cls):
         if cls._instance is None:
@@ -18,6 +21,19 @@ class SimulationService:
     @property
     def adapter(self) -> IXILAdapter:
         return self._adapter
+
+    async def switch_domain(self, domain_id: int):
+        if self._domain == domain_id:
+            return
+            
+        # Stop current simulation if running
+        await self._adapter.stop_simulation()
+        
+        self._domain = domain_id
+        if domain_id == 1:
+            self._adapter = MockAeroAdapter()
+        else:
+            self._adapter = MockXILAdapter()
 
 # Global singleton instance
 simulation_service = SimulationService()
