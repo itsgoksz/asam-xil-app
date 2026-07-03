@@ -1,0 +1,19 @@
+# Environments
+venv/
+env/
+.env
+.venv
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite databases (Telemetry persistence)
+*.db
+*.sqlite3
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
