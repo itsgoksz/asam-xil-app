@@ -133,13 +133,16 @@ async def run_robot_suite(filename: str, req: RunScriptRequest = None):
     os.makedirs(output_dir, exist_ok=True)
 
     try:
-        # Use subprocess to invoke Robot Framework to avoid import conflicts
-        # with our own robot.py module name
+        # Resolve the actual robot CLI wrapper to avoid -m name shadowing with the local 'robot' directory
+        robot_bin = os.path.join(os.path.dirname(sys.executable), "robot")
+        if not os.path.exists(robot_bin):
+            robot_bin = "robot"
+            
         loop = asyncio.get_event_loop()
         result = await loop.run_in_executor(
             None,
             lambda: subprocess.run(
-                [sys.executable, "-m", "robot",
+                [robot_bin,
                  "--outputdir", output_dir,
                  "--loglevel", "INFO",
                  "--consolecolors", "off",

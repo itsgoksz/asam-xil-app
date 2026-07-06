@@ -7,9 +7,13 @@ import asyncio
 from app.api.telemetry import router as telemetry_router
 from app.api.simulation import router as simulation_router
 from app.api.robot import router as robot_router
+from app.api.copilot import router as copilot_router
 from app.core.database import engine, Base
 from app.services.persistence_service import persistence_service
 from app.services.simulation_service import simulation_service
+
+# Ensure models are loaded before creating tables
+import app.models.telemetry
 
 # Create DB tables
 Base.metadata.create_all(bind=engine)
@@ -52,6 +56,7 @@ app.add_middleware(
 app.include_router(telemetry_router)
 app.include_router(simulation_router, prefix="/api/simulation", tags=["simulation"])
 app.include_router(robot_router, prefix="/api/robot", tags=["robot"])
+app.include_router(copilot_router, prefix="/api/copilot", tags=["copilot"])
 
 @app.get("/health")
 async def health_check():

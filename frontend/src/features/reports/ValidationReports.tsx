@@ -112,7 +112,7 @@ export function ValidationReports({}: ValidationReportsProps) {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/robot/results');
+        const response = await fetch(`http://localhost:8000/api/robot/results?t=${Date.now()}`, { cache: 'no-store' });
         if (response.ok) {
           const data = await response.json();
           setBackendReports(data.reports || []);

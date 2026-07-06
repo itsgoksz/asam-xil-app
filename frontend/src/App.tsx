@@ -28,7 +28,7 @@ function App() {
   const { startSimulation, stopSimulation, writeSignal, loadScenario, injectFault, runRobotTest, runCustomRobotTest, configureEnvironment } = useSimulation(handleEvent);
   const [activeWorkspace, setActiveWorkspace] = useState('Simulation Console');
   const [isSimRunning, setIsSimRunning] = useState(false);
-  
+
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -72,17 +72,15 @@ function App() {
         return <Scenarios loadScenario={loadScenario} />;
       case 'Fault Injection':
         return <FaultInjection injectFault={injectFault} />;
-      case 'Copilot':
-        return <Copilot telemetry={data} />;
       case 'Validation Reports':
         return <ValidationReports reports={reports} />;
       default:
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%', overflow: 'hidden', p: 1.5, gap: 1.5 }}>
-            
+
             {/* Main Grid: Left Sidebar | Center Stage (Twin) | Right Sidebar */}
             <Box sx={{ display: 'grid', gridTemplateColumns: '280px 1fr 300px', width: '100%', gap: 1.5, flexGrow: 1, minHeight: 0 }}>
-              
+
               {/* --- LEFT SIDEBAR (Controls) --- */}
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 0, overflowY: 'auto', pr: 0.5 }}>
                 <Paper sx={{ p: 2.5, borderRadius: 3, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, bgcolor: 'background.paper', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
@@ -104,7 +102,7 @@ function App() {
                     </Typography>
                   </Box>
                 </Paper>
-                
+
                 <Box sx={{ flexShrink: 0, bgcolor: 'background.paper', borderRadius: 3, border: '1px solid rgba(255, 255, 255, 0.05)', overflow: 'hidden' }}>
                   <DriveControls telemetry={data} writeSignal={writeSignal} />
                 </Box>
@@ -123,7 +121,7 @@ function App() {
                 <Box sx={{ flexShrink: 0, bgcolor: 'background.paper', borderRadius: 3, border: '1px solid rgba(255, 255, 255, 0.05)', overflow: 'hidden' }}>
                   <DigitalTwinConfig onConfigure={configureEnvironment} />
                 </Box>
-                
+
                 <Box sx={{ flexShrink: 0 }}>
                   <SystemDiagnostics telemetry={data} />
                 </Box>
@@ -138,7 +136,7 @@ function App() {
               <TelemetryChart title="Battery SOC" value={data?.battery_soc || 100} unit="%" color="#32D74B" min={0} max={100} />
               <TelemetryChart title="Motor Temp" value={data?.motor_temp_c || 25} unit="°C" color="#FF3B30" min={20} max={150} />
             </Box>
-            
+
           </Box>
         );
     }
@@ -146,11 +144,11 @@ function App() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: 'background.default' }}>
-      <Box sx={{ 
-        height: 52, 
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)', 
-        display: 'flex', 
-        alignItems: 'center', 
+      <Box sx={{
+        height: 52,
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        display: 'flex',
+        alignItems: 'center',
         px: 2,
         bgcolor: 'rgba(10, 10, 12, 0.8)',
         backdropFilter: 'blur(20px)',
@@ -159,22 +157,22 @@ function App() {
         <Button onClick={() => setSidebarOpen(!sidebarOpen)} sx={{ minWidth: 40, mr: 2, color: 'text.primary', fontSize: 18 }}>
           {sidebarOpen ? '◀' : '▶'}
         </Button>
-        <Typography variant="body1" sx={{ fontWeight: 700, mr: 4, letterSpacing: '0.5px' }}>ASAM XIL Engineering Platform</Typography>
+        <Typography variant="body1" sx={{ fontWeight: 700, mr: 4, letterSpacing: '0.5px' }}>EV Engineering Platform</Typography>
         <Typography variant="body2" color="success.main" sx={{ mr: 2, fontWeight: 500 }}>● Backend Healthy</Typography>
         <Typography variant="body2" color={wsStatus === 'connected' ? "success.main" : "error.main"} sx={{ mr: 2, fontWeight: 500 }}>
           ● WSS {wsStatus === 'connected' ? 'Streaming' : 'Disconnected'}
         </Typography>
-        <Typography variant="body2" color="warning.main" sx={{ mr: 2, fontWeight: 500 }}>● Mock XIL</Typography>
+        {/* <Typography variant="body2" color="warning.main" sx={{ mr: 2, fontWeight: 500 }}></Typography> */}
         {wsStatus === 'connected' && (
           <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto', fontWeight: 500 }}>Signal Rate: 250ms</Typography>
         )}
       </Box>
-      
+
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
-        <Box sx={{ 
-          width: sidebarOpen ? 260 : 0, 
+        <Box sx={{
+          width: sidebarOpen ? 260 : 0,
           transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          borderRight: sidebarOpen ? '1px solid rgba(255, 255, 255, 0.08)' : 0, 
+          borderRight: sidebarOpen ? '1px solid rgba(255, 255, 255, 0.08)' : 0,
           bgcolor: 'rgba(15, 15, 20, 0.4)',
           backdropFilter: 'blur(10px)',
           p: sidebarOpen ? 2 : 0,
@@ -183,30 +181,33 @@ function App() {
         }}>
           <Typography variant="h6" sx={{ mb: 2, opacity: sidebarOpen ? 1 : 0, transition: 'opacity 0.2s' }}>Workspaces</Typography>
           {['Simulation Console', 'Scenarios', 'Vehicle Twin', 'Telemetry', 'Variable Explorer', 'Fault Injection', 'Robot Automation', 'Validation Reports', 'Copilot'].map(ws => (
-            <Typography 
+            <Typography
               key={ws}
-              variant="body2" 
+              variant="body2"
               onClick={() => setActiveWorkspace(ws)}
-              sx={{ 
-                mb: 1.5, 
-                cursor: 'pointer', 
+              sx={{
+                mb: 1.5,
+                cursor: 'pointer',
                 color: activeWorkspace === ws ? 'primary.main' : 'text.primary',
                 fontWeight: activeWorkspace === ws ? 600 : 400,
                 opacity: sidebarOpen ? 1 : 0,
                 transition: 'opacity 0.2s',
-                '&:hover': { color: 'primary.main'} 
+                '&:hover': { color: 'primary.main' }
               }}
             >
               {ws}
             </Typography>
           ))}
         </Box>
-        
+
         <Box sx={{ flexGrow: 1, p: 2, overflowY: 'auto' }}>
           <Box sx={{ display: activeWorkspace === 'Robot Automation' ? 'block' : 'none', height: '100%' }}>
-            <RobotFramework runRobotTest={runRobotTest} runCustomRobotTest={runCustomRobotTest} onTestComplete={handleTestComplete} onLogEvent={handleEvent} />
+            <RobotFramework runRobotTest={runRobotTest} runCustomRobotTest={runCustomRobotTest} onTestComplete={handleTestComplete} onLogEvent={handleEvent} isActive={activeWorkspace === 'Robot Automation'} />
           </Box>
-          {activeWorkspace !== 'Robot Automation' && renderWorkspace()}
+          <Box sx={{ display: activeWorkspace === 'Copilot' ? 'block' : 'none', height: '100%' }}>
+            <Copilot telemetry={data} onNavigate={(ws: string) => setActiveWorkspace(ws)} />
+          </Box>
+          {activeWorkspace !== 'Robot Automation' && activeWorkspace !== 'Copilot' && renderWorkspace()}
         </Box>
       </Box>
 

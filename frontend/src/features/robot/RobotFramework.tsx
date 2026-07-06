@@ -9,6 +9,7 @@ interface RobotFrameworkProps {
   runCustomRobotTest: (scriptContent: string) => Promise<any>;
   onTestComplete: (report: any) => void;
   onLogEvent?: (time: string, severity: 'INFO' | 'WARNING' | 'ERROR' | 'PASS', message: string) => void;
+  isActive?: boolean;
 }
 
 const PRESET_TESTS = [
@@ -17,7 +18,7 @@ const PRESET_TESTS = [
   { id: 'emergency_brake', name: 'Emergency Brake Test', desc: 'Asserts speed hits 0km/h on full brake' },
 ];
 
-export function RobotFramework({ runRobotTest, onTestComplete, onLogEvent }: RobotFrameworkProps) {
+export function RobotFramework({ runRobotTest, onTestComplete, onLogEvent, isActive }: RobotFrameworkProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [activeTestId, setActiveTestId] = useState<string | null>(null);
   const [presetLogs, setPresetLogs] = useState<string[]>([]);
@@ -38,7 +39,7 @@ export function RobotFramework({ runRobotTest, onTestComplete, onLogEvent }: Rob
 
   const [notification, setNotification] = useState<{ message: string; severity: 'success' | 'error' | 'info' } | null>(null);
 
-  // Fetch available test suites on mount
+  // Fetch available test suites when the tab becomes active
   useEffect(() => {
     const fetchSuites = async () => {
       try {
@@ -46,7 +47,7 @@ export function RobotFramework({ runRobotTest, onTestComplete, onLogEvent }: Rob
         if (response.ok) {
           const data = await response.json();
           setSuites(data.suites || []);
-          if (data.suites && data.suites.length > 0) {
+          if (data.suites && data.suites.length > 0 && !selectedSuite) {
             handleSuiteSelect(data.suites[0]);
           }
         }
@@ -54,8 +55,10 @@ export function RobotFramework({ runRobotTest, onTestComplete, onLogEvent }: Rob
         console.error('Error fetching suites:', e);
       }
     };
-    fetchSuites();
-  }, []);
+    if (isActive !== false) {
+      fetchSuites();
+    }
+  }, [isActive]);
 
   // Handle Splitter drag
   useEffect(() => {
