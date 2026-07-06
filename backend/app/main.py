@@ -6,6 +6,7 @@ import asyncio
 
 from app.api.telemetry import router as telemetry_router
 from app.api.simulation import router as simulation_router
+from app.api.robot import router as robot_router
 from app.core.database import engine, Base
 from app.services.persistence_service import persistence_service
 from app.services.simulation_service import simulation_service
@@ -49,11 +50,12 @@ app.add_middleware(
 )
 
 app.include_router(telemetry_router)
-app.include_router(simulation_router, prefix="/api/simulation")
+app.include_router(simulation_router, prefix="/api/simulation", tags=["simulation"])
+app.include_router(robot_router, prefix="/api/robot", tags=["robot"])
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "components": {"database": "disconnected", "mock_xil": "idle"}}
+    return {"status": "healthy", "components": {"database": "connected", "mock_xil": "idle"}}
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

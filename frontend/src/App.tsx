@@ -25,7 +25,7 @@ function App() {
     setEvents(prev => [...prev, { time, severity, message }]);
   };
 
-  const { startSimulation, stopSimulation, writeSignal, loadScenario, injectFault, runRobotTest, configureEnvironment } = useSimulation(handleEvent);
+  const { startSimulation, stopSimulation, writeSignal, loadScenario, injectFault, runRobotTest, runCustomRobotTest, configureEnvironment } = useSimulation(handleEvent);
   const [activeWorkspace, setActiveWorkspace] = useState('Simulation Console');
   const [isSimRunning, setIsSimRunning] = useState(false);
   
@@ -74,8 +74,6 @@ function App() {
         return <FaultInjection injectFault={injectFault} />;
       case 'Copilot':
         return <Copilot telemetry={data} />;
-      case 'Robot Automation':
-        return <RobotFramework runRobotTest={runRobotTest} onTestComplete={handleTestComplete} />;
       case 'Validation Reports':
         return <ValidationReports reports={reports} />;
       default:
@@ -205,7 +203,10 @@ function App() {
         </Box>
         
         <Box sx={{ flexGrow: 1, p: 2, overflowY: 'auto' }}>
-          {renderWorkspace()}
+          <Box sx={{ display: activeWorkspace === 'Robot Automation' ? 'block' : 'none', height: '100%' }}>
+            <RobotFramework runRobotTest={runRobotTest} runCustomRobotTest={runCustomRobotTest} onTestComplete={handleTestComplete} onLogEvent={handleEvent} />
+          </Box>
+          {activeWorkspace !== 'Robot Automation' && renderWorkspace()}
         </Box>
       </Box>
 

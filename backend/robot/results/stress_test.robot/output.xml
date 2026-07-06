@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.4.2 (Python 3.13.7 on win32)" generated="2026-07-06T11:38:26.578299" rpa="false" schemaversion="5">
+<suite id="s1" name="Stress Test" source="C:\Users\joseph.francis\My Projects\ASAM-XIL App\asam-xil-app\backend\robot\test_suites\stress_test.robot">
+<test id="s1-t1" name="Stress Test Extreme Conditions" line="5">
+<kw name="Start Simulation" owner="custom_keywords">
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:28.073734" level="INFO">Creating Session using : alias=xil, url=http://localhost:8000/api, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>xil</arg>
+<arg>${BASE_URL}</arg>
+<arg>verify=${False}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2026-07-06T11:38:28.071650" elapsed="0.003340"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:30.182049" level="INFO">POST Request : url=http://localhost:8000/api/simulation/start 
+ path_url=/api/simulation/start 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-07-06T11:38:30.182543" level="INFO">POST Response : url=http://localhost:8000/api/simulation/start 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:29 GMT', 'server': 'uvicorn', 'content-length': '20', 'content-type': 'application/json'} 
+ body={"status":"started"} 
+ </msg>
+<msg time="2026-07-06T11:38:30.183162" level="INFO">${start} = &lt;Response [200]&gt;</msg>
+<var>${start}</var>
+<arg>xil</arg>
+<arg>/simulation/start</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:28.075934" elapsed="2.107388"/>
+</kw>
+<kw name="Should Be Equal As Strings" owner="BuiltIn">
+<arg>${start.json()}[status]</arg>
+<arg>started</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.186680" elapsed="0.005805"/>
+</kw>
+<doc>Starts the simulation engine</doc>
+<status status="PASS" start="2026-07-06T11:38:28.064291" elapsed="2.128578"/>
+</kw>
+<kw name="Configure Vehicle" owner="custom_keywords">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-07-06T11:38:30.202566" level="INFO">Vehicle configured with mass=2000.0, drag=0.4</msg>
+<arg>Vehicle configured with mass=${mass}, drag=${drag_coef}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.198293" elapsed="0.004595"/>
+</kw>
+<arg>mass=2000.0</arg>
+<arg>drag_coef=0.4</arg>
+<doc>Configures the vehicle model</doc>
+<status status="PASS" start="2026-07-06T11:38:30.193623" elapsed="0.010006"/>
+</kw>
+<kw name="Configure Weather" owner="custom_keywords">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-07-06T11:38:30.213400" level="INFO">Weather configured with temperature=-5.0, humidity=90.0</msg>
+<arg>Weather configured with temperature=${temperature}, humidity=${humidity}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.211517" elapsed="0.002169"/>
+</kw>
+<arg>temperature=-5.0</arg>
+<arg>humidity=90.0</arg>
+<doc>Configures the weather conditions</doc>
+<status status="PASS" start="2026-07-06T11:38:30.205573" elapsed="0.009145"/>
+</kw>
+<kw name="Configure Road" owner="custom_keywords">
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-07-06T11:38:30.226327" level="INFO">Road configured with surface=gravel, friction=0.3</msg>
+<arg>Road configured with surface=${surface}, friction=${friction}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.222301" elapsed="0.005666"/>
+</kw>
+<arg>surface=gravel</arg>
+<arg>friction=0.3</arg>
+<doc>Configures the road condition</doc>
+<status status="PASS" start="2026-07-06T11:38:30.218965" elapsed="0.009465"/>
+</kw>
+<kw name="Set Accelerator" owner="custom_keywords">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-07-06T11:38:30.233656" level="INFO">${body} = {'signal_name': 'throttle_pos_percent', 'value': '100.0'}</msg>
+<var>${body}</var>
+<arg>signal_name=throttle_pos_percent</arg>
+<arg>value=${position}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.231307" elapsed="0.002520"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:30.245332" level="INFO">POST Request : url=http://localhost:8000/api/simulation/write 
+ path_url=/api/simulation/write 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '57', 'Content-Type': 'application/json'} 
+ body=b'{"signal_name": "throttle_pos_percent", "value": "100.0"}' 
+ </msg>
+<msg time="2026-07-06T11:38:30.247531" level="INFO">POST Response : url=http://localhost:8000/api/simulation/write 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:29 GMT', 'server': 'uvicorn', 'content-length': '68', 'content-type': 'application/json'} 
+ body={"status":"success","signal":"throttle_pos_percent","value":"100.0"} 
+ </msg>
+<arg>xil</arg>
+<arg>/simulation/write</arg>
+<arg>json=${body}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.234408" elapsed="0.013526"/>
+</kw>
+<arg>100.0</arg>
+<doc>Sets the accelerator pedal position (0-100%)</doc>
+<status status="PASS" start="2026-07-06T11:38:30.229376" elapsed="0.018920"/>
+</kw>
+<kw name="Wait" owner="custom_keywords">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-07-06T11:38:34.252996" level="INFO">Slept 4 seconds.</msg>
+<arg>${time}</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-07-06T11:38:30.250117" elapsed="4.003198"/>
+</kw>
+<arg>4s</arg>
+<doc>Waits for a given time</doc>
+<status status="PASS" start="2026-07-06T11:38:30.248982" elapsed="4.004555"/>
+</kw>
+<kw name="Get Telemetry" owner="custom_keywords">
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:34.262776" level="INFO">GET Request : url=http://localhost:8000/api/simulation/state 
+ path_url=/api/simulation/state 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg time="2026-07-06T11:38:34.263014" level="INFO">GET Response : url=http://localhost:8000/api/simulation/state 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:33 GMT', 'server': 'uvicorn', 'content-length': '591', 'content-type': 'application/json'} 
+ body={"status":"running","signals":{"vehicle_speed_kmh":44.624136847884415,"rpm":3396.571631491959,"battery_soc":99.94687507789054,"battery_voltage":400.0,"motor_temp_c":25.717425226223956,"brake_pressure_bar":0.0,"steering_angle_deg":0.0,"throttle_pos_percent":100.0,"gear":1,"motor_current_a":285.40816137871224,"power_consumption_kw":114.1632645514849,"wheel_slip_percent":5.795251612426378,"abs_active":0,"esc_active":0,"coolant_temp_c":27.13359007158844,"coolant_pump_speed_percent":0.0,"radiator_fan_speed_percent":0.0,"acceleration_mps2":4.935820886468125,"lateral_acceleration_mps2":0.0}} 
+ </msg>
+<msg time="2026-07-06T11:38:34.263465" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>xil</arg>
+<arg>/simulation/state</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.254890" elapsed="0.008694"/>
+</kw>
+<return>
+<value>${resp.json()}[signals]</value>
+<status status="PASS" start="2026-07-06T11:38:34.263888" elapsed="0.000187"/>
+</return>
+<msg time="2026-07-06T11:38:34.269486" level="INFO">${telemetry} = {'vehicle_speed_kmh': 44.624136847884415, 'rpm': 3396.571631491959, 'battery_soc': 99.94687507789054, 'battery_voltage': 400.0, 'motor_temp_c': 25.717425226223956, 'brake_pressure_bar': 0.0, 'steering...</msg>
+<var>${telemetry}</var>
+<doc>Gets the current vehicle telemetry state</doc>
+<status status="PASS" start="2026-07-06T11:38:34.254155" elapsed="0.016057"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-07-06T11:38:34.272461" level="INFO">Speed after sudden acceleration on gravel: 44.624136847884415 km/h</msg>
+<arg>Speed after sudden acceleration on gravel: ${telemetry}[vehicle_speed_kmh] km/h</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.271118" elapsed="0.003567"/>
+</kw>
+<kw name="Set Accelerator" owner="custom_keywords">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-07-06T11:38:34.280300" level="INFO">${body} = {'signal_name': 'throttle_pos_percent', 'value': '0.0'}</msg>
+<var>${body}</var>
+<arg>signal_name=throttle_pos_percent</arg>
+<arg>value=${position}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.278383" elapsed="0.002057"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:34.304402" level="INFO">POST Request : url=http://localhost:8000/api/simulation/write 
+ path_url=/api/simulation/write 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '55', 'Content-Type': 'application/json'} 
+ body=b'{"signal_name": "throttle_pos_percent", "value": "0.0"}' 
+ </msg>
+<msg time="2026-07-06T11:38:34.304731" level="INFO">POST Response : url=http://localhost:8000/api/simulation/write 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:33 GMT', 'server': 'uvicorn', 'content-length': '66', 'content-type': 'application/json'} 
+ body={"status":"success","signal":"throttle_pos_percent","value":"0.0"} 
+ </msg>
+<arg>xil</arg>
+<arg>/simulation/write</arg>
+<arg>json=${body}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.281225" elapsed="0.024106"/>
+</kw>
+<arg>0.0</arg>
+<doc>Sets the accelerator pedal position (0-100%)</doc>
+<status status="PASS" start="2026-07-06T11:38:34.276275" elapsed="0.029626"/>
+</kw>
+<kw name="Set Brake" owner="custom_keywords">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-07-06T11:38:34.314125" level="INFO">${body} = {'signal_name': 'brake_pressure_bar', 'value': '150.0'}</msg>
+<var>${body}</var>
+<arg>signal_name=brake_pressure_bar</arg>
+<arg>value=${pressure}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.310723" elapsed="0.003730"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:34.333935" level="INFO">POST Request : url=http://localhost:8000/api/simulation/write 
+ path_url=/api/simulation/write 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '55', 'Content-Type': 'application/json'} 
+ body=b'{"signal_name": "brake_pressure_bar", "value": "150.0"}' 
+ </msg>
+<msg time="2026-07-06T11:38:34.335294" level="INFO">POST Response : url=http://localhost:8000/api/simulation/write 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:33 GMT', 'server': 'uvicorn', 'content-length': '66', 'content-type': 'application/json'} 
+ body={"status":"success","signal":"brake_pressure_bar","value":"150.0"} 
+ </msg>
+<arg>xil</arg>
+<arg>/simulation/write</arg>
+<arg>json=${body}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.318702" elapsed="0.019106"/>
+</kw>
+<arg>150.0</arg>
+<doc>Sets the brake pedal pressure</doc>
+<status status="PASS" start="2026-07-06T11:38:34.307559" elapsed="0.031699"/>
+</kw>
+<kw name="Wait" owner="custom_keywords">
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2026-07-06T11:38:37.352193" level="INFO">Slept 3 seconds.</msg>
+<arg>${time}</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2026-07-06T11:38:34.348733" elapsed="3.003834"/>
+</kw>
+<arg>3s</arg>
+<doc>Waits for a given time</doc>
+<status status="PASS" start="2026-07-06T11:38:34.344299" elapsed="3.008612"/>
+</kw>
+<kw name="Get Telemetry" owner="custom_keywords">
+<kw name="GET On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:37.363979" level="INFO">GET Request : url=http://localhost:8000/api/simulation/state 
+ path_url=/api/simulation/state 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'} 
+ body=None 
+ </msg>
+<msg time="2026-07-06T11:38:37.364212" level="INFO">GET Response : url=http://localhost:8000/api/simulation/state 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:37 GMT', 'server': 'uvicorn', 'content-length': '509', 'content-type': 'application/json'} 
+ body={"status":"running","signals":{"vehicle_speed_kmh":0.0,"rpm":0.0,"battery_soc":99.9734854527688,"battery_voltage":400.0,"motor_temp_c":26.100318097014053,"brake_pressure_bar":150.0,"steering_angle_deg":0.0,"throttle_pos_percent":0.0,"gear":1,"motor_current_a":-0.0,"power_consumption_kw":-0.0,"wheel_slip_percent":-100.0,"abs_active":1,"esc_active":0,"coolant_temp_c":28.22854378580814,"coolant_pump_speed_percent":0.0,"radiator_fan_speed_percent":0.0,"acceleration_mps2":0.0,"lateral_acceleration_mps2":0.0}} 
+ </msg>
+<msg time="2026-07-06T11:38:37.364723" level="INFO">${resp} = &lt;Response [200]&gt;</msg>
+<var>${resp}</var>
+<arg>xil</arg>
+<arg>/simulation/state</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:37.356474" elapsed="0.008352"/>
+</kw>
+<return>
+<value>${resp.json()}[signals]</value>
+<status status="PASS" start="2026-07-06T11:38:37.365035" elapsed="0.000165"/>
+</return>
+<msg time="2026-07-06T11:38:37.366842" level="INFO">${telemetry_after_brake} = {'vehicle_speed_kmh': 0.0, 'rpm': 0.0, 'battery_soc': 99.9734854527688, 'battery_voltage': 400.0, 'motor_temp_c': 26.100318097014053, 'brake_pressure_bar': 150.0, 'steering_angle_deg': 0.0, 'throttle_...</msg>
+<var>${telemetry_after_brake}</var>
+<doc>Gets the current vehicle telemetry state</doc>
+<status status="PASS" start="2026-07-06T11:38:37.355111" elapsed="0.011842"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2026-07-06T11:38:37.368352" level="INFO">Speed after hard braking on gravel: 0.0 km/h</msg>
+<arg>Speed after hard braking on gravel: ${telemetry_after_brake}[vehicle_speed_kmh] km/h</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2026-07-06T11:38:37.367348" elapsed="0.001174"/>
+</kw>
+<kw name="Should Be True" owner="BuiltIn">
+<arg>${telemetry_after_brake}[vehicle_speed_kmh] &lt; 20.0</arg>
+<arg>Vehicle failed to stop on gravel</arg>
+<doc>Fails if the given condition is not true.</doc>
+<status status="PASS" start="2026-07-06T11:38:37.368907" elapsed="0.002404"/>
+</kw>
+<kw name="Set Brake" owner="custom_keywords">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2026-07-06T11:38:37.375777" level="INFO">${body} = {'signal_name': 'brake_pressure_bar', 'value': '0.0'}</msg>
+<var>${body}</var>
+<arg>signal_name=brake_pressure_bar</arg>
+<arg>value=${pressure}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2026-07-06T11:38:37.373458" elapsed="0.002513"/>
+</kw>
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:37.390352" level="INFO">POST Request : url=http://localhost:8000/api/simulation/write 
+ path_url=/api/simulation/write 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '53', 'Content-Type': 'application/json'} 
+ body=b'{"signal_name": "brake_pressure_bar", "value": "0.0"}' 
+ </msg>
+<msg time="2026-07-06T11:38:37.390669" level="INFO">POST Response : url=http://localhost:8000/api/simulation/write 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:37 GMT', 'server': 'uvicorn', 'content-length': '64', 'content-type': 'application/json'} 
+ body={"status":"success","signal":"brake_pressure_bar","value":"0.0"} 
+ </msg>
+<arg>xil</arg>
+<arg>/simulation/write</arg>
+<arg>json=${body}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:37.376612" elapsed="0.014816"/>
+</kw>
+<arg>0.0</arg>
+<doc>Sets the brake pedal pressure</doc>
+<status status="PASS" start="2026-07-06T11:38:37.372101" elapsed="0.021459"/>
+</kw>
+<kw name="Stop Simulation" owner="custom_keywords">
+<kw name="POST On Session" owner="RequestsLibrary">
+<msg time="2026-07-06T11:38:37.409745" level="INFO">POST Request : url=http://localhost:8000/api/simulation/stop 
+ path_url=/api/simulation/stop 
+ headers={'User-Agent': 'python-requests/2.34.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg time="2026-07-06T11:38:37.410267" level="INFO">POST Response : url=http://localhost:8000/api/simulation/stop 
+ status=200, reason=OK 
+ headers={'date': 'Mon, 06 Jul 2026 06:08:37 GMT', 'server': 'uvicorn', 'content-length': '20', 'content-type': 'application/json'} 
+ body={"status":"stopped"} 
+ </msg>
+<msg time="2026-07-06T11:38:37.411231" level="INFO">${stop} = &lt;Response [200]&gt;</msg>
+<var>${stop}</var>
+<arg>xil</arg>
+<arg>/simulation/stop</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<status status="PASS" start="2026-07-06T11:38:37.395887" elapsed="0.015528"/>
+</kw>
+<doc>Stops the simulation engine</doc>
+<status status="PASS" start="2026-07-06T11:38:37.394459" elapsed="0.017331"/>
+</kw>
+<doc>Test vehicle behavior under sudden acceleration, gravel road, extreme weather, and hard braking.</doc>
+<status status="PASS" start="2026-07-06T11:38:28.055021" elapsed="9.357349"/>
+</test>
+<status status="PASS" start="2026-07-06T11:38:26.589795" elapsed="10.825479"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="Stress Test" id="s1" pass="1" fail="0" skip="0">Stress Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

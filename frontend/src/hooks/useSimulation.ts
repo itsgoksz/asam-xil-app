@@ -124,5 +124,29 @@ export function useSimulation(onEvent?: (time: string, severity: 'INFO' | 'WARNI
     }
   };
 
-  return { startSimulation, stopSimulation, writeSignal, loadScenario, injectFault, runRobotTest, configureEnvironment, isLoading };
+  const runCustomRobotTest = async (scriptContent: string) => {
+    setIsLoading(true);
+    triggerEvent('INFO', 'Executing custom Robot Framework script...');
+    try {
+      const res = await fetch(`${API_BASE}/run-custom-robot`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ script_content: scriptContent }),
+      });
+      const data = await res.json();
+      if (data.results.overall_status === 'PASS') {
+        triggerEvent('PASS', 'Custom Robot script: ALL TESTS PASSED');
+      } else {
+        triggerEvent('ERROR', 'Custom Robot script: TESTS FAILED');
+      }
+      return data;
+    } catch (e) {
+      triggerEvent('ERROR', 'Failed to execute custom Robot script');
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { startSimulation, stopSimulation, writeSignal, loadScenario, injectFault, runRobotTest, runCustomRobotTest, configureEnvironment, isLoading };
 }

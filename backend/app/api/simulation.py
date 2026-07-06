@@ -1,4 +1,8 @@
 import asyncio
+import os
+import tempfile
+import shutil
+from xml.etree import ElementTree
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Any
@@ -126,4 +130,18 @@ async def run_robot_test(req: TestRequest):
             "details": details
         }
     }
+
+
+# ---------------------------------------------------------------------------
+# New endpoints for custom Robot Framework script execution
+# ---------------------------------------------------------------------------
+
+@router.get("/state")
+async def get_simulation_state():
+    """Return the current simulation state so Robot scripts can assert on it."""
+    state = await simulation_service.adapter.read_signals()
+    sim_status = await simulation_service.adapter.get_status()
+    return {"status": sim_status, "signals": state}
+
+
 
